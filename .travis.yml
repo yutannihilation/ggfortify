@@ -2,13 +2,16 @@ language: r
 warnings_are_errors: true
 sudo: required
 
-env:
-  - GGPLOT=DEV
-  - GGPLOT=STD
+matrix:
+  include:
+    - env: RVER=STD GGPLOT=DEV
+    - env: RVER=STD GGPLOT=STD
+    - env: RVER=DEV GGPLOT=STD
 
 r_binary_packages:
   - dplyr
   - tidyr
+  - proto
   - ggplot2
   - testthat
   - changepoint
@@ -29,6 +32,9 @@ r_github_packages:
   - jimhester/covr
 
 before_install:
+  - if [[ "$RVER" == "DEV" ]]; then
+      sh install_rdevel.sh;
+    fi
   - echo "options(repos = c(CRAN='http://cran.rstudio.com'))" >> ~/.Rprofile
   - if [[ "$GGPLOT" == "DEV" ]]; then
       Rscript -e 'install.packages("devtools")';
@@ -39,3 +45,5 @@ before_install:
 
 after_success:
   - Rscript -e 'library(covr);coveralls()'
+  - R --version
+  - Rscript -e 'library("ggplot2"); packageVersion("ggplot2")'

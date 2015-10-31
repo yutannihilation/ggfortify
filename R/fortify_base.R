@@ -93,12 +93,14 @@ autoplot.matrix <- function (object, original = NULL, geom = 'tile',
       message <- paste0("Argument 'scale' is being deprecated. Use + operator to returned ggplot instance.")
       warning(message, call. = FALSE)
     }
-    ylim <- rev(levels(as.factor(gathered$Index)))
+    if (is.null(ylim)) {
+      ylim <- rev(levels(as.factor(gathered$Index)))
+    }
     mapping <- ggplot2::aes_string(x = 'variable', y = 'Index', fill = 'value')
     p <- ggplot2::ggplot(mapping = mapping) +
       geom_factory(geom_tile, gathered, alpha = alpha) +
       scale +
-      xlab('Columns') + ylab('Rows') + ylim(ylim)
+      xlab('Columns') + ylab('Rows')
   } else if (geom == 'point') {
     if (ncol(object) != 2) {
       stop("Number of columns must be 2 to plot with 'geom = point'")
