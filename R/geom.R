@@ -16,6 +16,7 @@ geom_confint <- function (mapping = NULL, data = NULL, stat = "identity",
                  params = list(na.rm = na.rm, ...))
 }
 
+#' @rdname geom_confint
 #' @export
 GeomConfint <- ggplot2::ggproto('GeomConfint', ggplot2::GeomRibbon,
   required_aes = c("x", "ymin", "ymax"),
